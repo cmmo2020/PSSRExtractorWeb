@@ -1,0 +1,236 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Results</title>
+    </h:head>
+    <h:body onunload="leavingPage();">
+        <p:accordionPanel multiple="true">
+            <p:tab title="MIDAS result">
+                <h:form>
+                    
+                    <p:remoteCommand id="leavingPage" name="leavingPage" action="#{mIDASManagedBean.clear()}"/>
+                    
+                    <br>
+                        <p:outputLabel value="Input Parameters:"/> 
+                        <p:spacer height="10" width="20"/> 
+                        <p:outputLabel value="Max Unit: #{mIDASManagedBean.maxUnit}"/>
+                        <p:spacer height="10" width="20"/> 
+                        <p:outputLabel value="Model: #{mIDASManagedBean.model}"/>
+                        <p:spacer height="10" width="20"/>
+                        <p:outputLabel value="File: #{mIDASManagedBean.uploadedFile.fileName}"/>
+                    </br>
+                    <br>
+                        <p:commandButton value="Download" ajax="false" title="MultiFasta format in a txt file...">
+                            <p:fileDownload value="#{mIDASManagedBean.file}"/>
+                        </p:commandButton>
+                    </br>
+                    <br>
+                        <p:inputTextarea id="MIDASResults"
+                                         value="#{mIDASManagedBean.results}"
+                                         readonly="true" 
+                                         title="MIDAS Results" 
+                                         autoResize="false"
+                                         cols="155"
+                                         rows="20"/>
+                    </br>
+                </h:form>
+            </p:tab>
+            <p:tab title="PSSRExtractor specific results">
+                <h:form>
+                    <br>
+                        <p:outputLabel value="Input Parameters:"/> 
+                        <p:spacer height="10" width="20"/> 
+                        <p:outputLabel value="Organism: #{mIDASManagedBean.organism}"/>
+                        <p:spacer height="10" width="20"/> 
+                        <p:outputLabel value="Max Target Sequences: #{mIDASManagedBean.maxTargetSequences}"/>
+                        <p:spacer height="10" width="20"/>
+                        <p:outputLabel value="Expect Threshold: #{mIDASManagedBean.expectThreshold}"/>
+                        <p:spacer height="10" width="20"/>
+                        <p:outputLabel value="Identity percent: #{mIDASManagedBean.identityPercent} %"/>
+                        <p:spacer height="10" width="20"/>
+                        <p:outputLabel value="Coverage percent: #{mIDASManagedBean.coveragePercent} %"/>
+                    </br>
+                    
+                    <h:commandLink title="Download">
+                        <p:graphicImage url="./../resources/images/ExcelLogo.png"/>
+                        <p:dataExporter type="xls" target="specificResults" 
+                                        fileName="#{mIDASManagedBean.uploadedFile.fileName}_specific_result_#{mIDASManagedBean.identityPercent}_#{mIDASManagedBean.coveragePercent}"/>
+                        
+                    </h:commandLink>
+                    
+                    <p:dataTable id="specificResults" value="#{mIDASManagedBean.specificResults}" var="sr" resizableColumns="true" scrollable="true" scrollHeight="400">
+                        
+                        <p:column headerText="q acc.ver" filterBy="#{sr.query_acc_ver}" filterMatchMode="contains">
+                            
+                            <p:outputLabel value="#{sr.resumeQuery_acc_ver}" style=" font-size:  x-small"/>
+                        </p:column>
+                        
+                        <p:column headerText="s acc.ver" filterBy="#{sr.subject_acc_ver}" filterMatchMode="contains">
+                            
+                            <p:outputLabel value="#{sr.subject_acc_ver}" style="font-size:  x-small"/>
+                        </p:column>
+                        
+                        <p:column headerText="s start" filterBy="#{sr.start_p}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{sr.start_p}" style="font-size:  x-small"/>
+                        </p:column>
+                        
+                        <p:column headerText="s end" filterBy="#{sr.end_p}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{sr.end_p}" style="font-size:  x-small"/>
+                        </p:column>
+                        
+                        <p:column headerText="bp" filterBy="#{sr.number_of_Nbases}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{sr.number_of_Nbases}" style="font-size:  x-small"/>
+                        </p:column>
+                        
+                        <p:column headerText="r units" filterBy="#{sr.number_of_Runits}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{sr.number_of_Runits}" style="font-size:  x-small"/>
+                        </p:column>
+                        
+                        <p:column headerText="strand" filterBy="#{sr.direction}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{sr.direction}" style="font-size:  x-small"/>
+                        </p:column>
+                        
+                        <p:column headerText="outlier" filterBy="#{sr.outlier}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{sr.outlier}" style="font-size:  x-small"/>
+                        </p:column>
+                        
+                        <p:column headerText="exception" filterBy="#{sr.exceptions}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{sr.exceptions}" style="font-size:  x-small"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:tab>
+            <p:tab title="PSSRExtractor generic results">
+                <h:form>
+                    <br>
+                        <p:outputLabel value="Input Parameters:"/> 
+                        <p:spacer height="10" width="20"/> 
+                        <p:outputLabel value="Organism: #{mIDASManagedBean.organism}"/>
+                        <p:spacer height="10" width="20"/> 
+                        <p:outputLabel value="Max Target Sequences: #{mIDASManagedBean.maxTargetSequences}"/>
+                        <p:spacer height="10" width="20"/>
+                        <p:outputLabel value="Expect Threshold: #{mIDASManagedBean.expectThreshold}"/>
+                        <p:spacer height="10" width="20"/>
+                        <p:outputLabel value="Identity percent: #{mIDASManagedBean.identityPercent} %"/>
+                        <p:spacer height="10" width="20"/>
+                        <p:outputLabel value="Coverage percent: #{mIDASManagedBean.coveragePercent} %"/>
+                    </br>
+                    
+                    <h:commandLink title="Download">
+                        <p:graphicImage url="./../resources/images/ExcelLogo.png"/>
+                        <p:dataExporter type="xls" target="genericResults" 
+                                        fileName="#{mIDASManagedBean.uploadedFile.fileName}_generic_result_#{mIDASManagedBean.identityPercent}_#{mIDASManagedBean.coveragePercent}"/>
+                    </h:commandLink>
+                    <p:dataTable id="genericResults" value="#{mIDASManagedBean.genericResults}" var="gr" style="font-size: xx-small" resizableColumns="true" scrollable="true" scrollHeight="400">
+                        
+                        <p:column headerText="ssr id" filterBy="#{gr.query_acc_ver}" filterMatchMode="contains">
+                            
+                            <p:outputLabel value="#{gr.query_acc_ver}"/>
+                        </p:column>
+                        
+                        <p:column headerText="q acc.ver" filterBy="#{gr.access_number}" filterMatchMode="contains">
+                            
+                            <p:outputLabel value="#{gr.access_number}"/>
+                        </p:column>
+                        
+                        <p:column headerText="q start" filterBy="#{gr.locat_l}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.locat_l}"/>
+                        </p:column>
+                        
+                        <p:column headerText="q end" filterBy="#{gr.locat_r}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.locat_r}"/>
+                        </p:column>
+                        
+                        <p:column headerText="pattern" filterBy="#{gr.pattern}" filterMatchMode="contains">
+                            
+                            <p:outputLabel value="#{gr.pattern}"/>
+                        </p:column>
+                        
+                        <p:column headerText="p length" filterBy="#{gr.pattern_length}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.pattern_length}"/>
+                        </p:column>
+                        
+                        <p:column headerText="rn" filterBy="#{gr.number_of_Runits}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.number_of_Runits}"/>
+                        </p:column>
+                        
+                        <p:column headerText="innacuracy(%)" filterBy="#{gr.inaccuracy}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.inaccuracy}"/>
+                        </p:column>
+                        
+                        <p:column headerText="l flank" filterBy="#{gr.f5}" filterMatchMode="contains">
+                            
+                            <p:outputLabel value="#{gr.f5}"/>
+                        </p:column>
+                        
+                        <p:column headerText="entropy lf" filterBy="#{gr.entropy_5}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.entropy_5}"/>
+                        </p:column>
+                        
+                        <p:column headerText="r flank" filterBy="#{gr.f3}" filterMatchMode="contains">
+                            
+                            <p:outputLabel value="#{gr.f3}"/>
+                        </p:column>
+                        
+                        <p:column headerText="entropy rf" filterBy="#{gr.entropy_3}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.entropy_3}"/>
+                        </p:column>
+                        
+                        <p:column headerText="min rn" filterBy="#{gr.min_quantity}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.min_quantity}"/>
+                        </p:column>
+                        
+                        <p:column headerText="max rn" filterBy="#{gr.max_quantity}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.max_quantity}"/>
+                        </p:column>
+                        
+                        <p:column headerText="range" filterBy="#{gr.range}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.range}"/>
+                        </p:column>
+                        
+                        <p:column headerText="frequency" filterBy="#{gr.alelic_Frequency}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.alelic_Frequency}"/>
+                        </p:column>
+                        
+                        <p:column headerText="alleles" filterBy="#{gr.alelics_Number}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.alelics_Number}"/>
+                        </p:column>
+                        
+                        <p:column headerText="PIC" filterBy="#{gr.PIC}" filterMatchMode="exact">
+                            
+                            <p:outputLabel value="#{gr.PIC}"/>
+                        </p:column>
+                        
+                        <p:column headerText="exceptions" filterBy="#{gr.exceptions}" filterMatchMode="contains">
+                            
+                            <p:outputLabel value="#{gr.exceptions}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:tab>
+        </p:accordionPanel>
+    </h:body>
+</html>
+

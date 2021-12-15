@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+    <f:view contentType="text/html">
+        <h:head>
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>Polymorphic SSRs Extractor Service</title>    
+        </h:head>
+        
+        <h:body onunload="leavingPage();"> 
+            <p:layout fullPage="true">
+                
+                <p:layoutUnit position="north" size="90" closable="true" collapsible="true">
+                    <p:graphicImage url="./resources/images/Logo.png" height="75" width="600"/>
+                </p:layoutUnit>
+                
+                <p:layoutUnit position="south" size="50" closable="true" collapsible="true">
+                    e-mail: cmmo@infomed.sld.cu
+                </p:layoutUnit>
+                
+                <p:layoutUnit position="center">
+                    <h:form id="form" enctype="multipart/form-data">
+                        
+                        <p:remoteCommand id="leavingPage" name="leavingPage" action="#{mIDASManagedBean.clear()}"/>
+                        
+                        <p:outputLabel for="MIDASInput" value="* Upload nucleotide sequence (fasta):"/>
+                        <p/>
+                        <p:inputTextarea id="MIDASInput"
+                                         value="#{mIDASManagedBean.MIDASInput}"
+                                         autoResize="false"
+                                         cols="83"
+                                         rows="5">
+                        </p:inputTextarea> 
+                        <p/>
+                        <p:outputLabel value="Or, upload file (gbk or fasta) "/>
+                        <p:fileUpload skinSimple="true"
+                                      id="uploadedFile"
+                                      label="Choose file"
+                                      style="font-size: 90% "  
+                                      value="#{mIDASManagedBean.uploadedFile}"
+                                      mode="simple" 
+                                      sizeLimit="20000000" 
+                                      fileLimit="1" 
+                                      allowTypes="/(\.|\/)(fasta|gbk|faa|fa|txt|docx|pdf)$/"/>
+                        <p/>
+                        <p:outputLabel for="organism" value="* Organism:"/>
+                        <p/>
+                        <p:autoComplete id="organism"
+                                        value="#{mIDASManagedBean.organism}"
+                                        size="81"                   
+                                        maxResults="100"
+                                        scrollHeight="200"
+                                        title="Selects the organism to which the sequences belong. BLAST will search sequences from the same organism."
+                                        completeMethod="#{mIDASManagedBean.search}"/>
+                        <p/>
+                        <p:panelGrid id="panel" columns="3">
+                            <p:outputLabel for="maxUnit" value="* Max Repeat Unit:"/> 
+                            <p:outputLabel for="maxTargetSequences" value="* Max Target Sequences:"/>
+                            <p:outputLabel for="identityPercent" value="* Identity Percent:"/>
+                            <p:spinner id="maxUnit" 
+                                       value="#{mIDASManagedBean.maxUnit}" 
+                                       suffix=" bp" 
+                                       onkeydown="return false;" 
+                                       label="6" 
+                                       min="1" 
+                                       max="6" 
+                                       size="1"
+                                       title="Sets the maximum size of the repeat unit to be scanned in the genome."/>
+                            <p:spinner id="maxTargetSequences"
+                                       value="#{mIDASManagedBean.maxTargetSequences}"
+                                       onkeydown="return false;"
+                                       min="20" 
+                                       max="500" 
+                                       size="1" 
+                                       stepFactor="10"
+                                       title="Sets the maximum of similar sequences that BLAST will return."/>
+                            <p:spinner id="identityPercent"
+                                       value="#{mIDASManagedBean.identityPercent}"
+                                       onkeydown="return false;"
+                                       min="90" 
+                                       max="100" 
+                                       size="2" 
+                                       stepFactor="5"
+                                       suffix="%"
+                                       title="The extent to which two sequences have the same residues at the same positions in an alignment."/>
+                            <p:outputLabel for="model" value="* Model Parameters (Match, Mismatch, Indel):"/>
+                            <p:outputLabel for="expectThreshold" value="* Expect Threshold:"/>
+                            <p:outputLabel for="coveragePercent" value="* Coverage Percent:"/>
+                            <p:selectOneMenu id="model" value="#{mIDASManagedBean.model}" title="Alignment parameters scheme for match, mismatch and indel.">
+                                <f:selectItem itemLabel="2 -7 -7 " itemValue="1" />
+                                <f:selectItem itemLabel="2 -5 -7" itemValue="2" />
+                                <f:selectItem itemLabel="2 -5 -5" itemValue="3" />
+                                <f:selectItem itemLabel="2 -3 -5" itemValue="4" />
+                            </p:selectOneMenu>
+                            <p:spinner id="expectThreshold"
+                                       value="#{mIDASManagedBean.expectThreshold}"
+                                       onkeydown="return false;"
+                                       min="30" 
+                                       max="100" 
+                                       size="1" 
+                                       stepFactor="5"
+                                       title="Filters sequences with an expected value higher than the selected one."/>
+                            <p:spinner id="coveragePercent"
+                                       value="#{mIDASManagedBean.coveragePercent}"
+                                       onkeydown="return false;"
+                                       min="90" 
+                                       max="100" 
+                                       size="2" 
+                                       stepFactor="5"
+                                       suffix="%"
+                                       title="Represents in what percentage two sequences (query and subject) have the same number of nucleotides."/>
+                            <f:facet name="footer">
+                                <h:panelGroup>
+                                    <p:commandButton id="submit"
+                                                     ajax="false" 
+                                                     value="Submit" 
+                                                     action="#{mIDASManagedBean.doNavigation()}"/>
+                                </h:panelGroup>
+                            </f:facet>
+                        </p:panelGrid>
+                    </h:form>
+                </p:layoutUnit>
+            </p:layout> 
+        </h:body>
+    </f:view>
+</html>
+
